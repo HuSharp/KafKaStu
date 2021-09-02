@@ -43,5 +43,21 @@ public class KafkaProducerAnalysis {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // 2021.09.02 测试 Consumer 的超时拦截器
+        try {
+            final long EXPIRE_INTERVAL = 10 * 1000;
+            ProducerRecord<String, String> record1 = new ProducerRecord<>(
+                    topic, 0, System.currentTimeMillis() - EXPIRE_INTERVAL, null, "first-expire-data!");
+            producer.send(record1);
+            ProducerRecord<String, String> record2 = new ProducerRecord<>(
+                    topic, 0, System.currentTimeMillis() - EXPIRE_INTERVAL, null, "normal-data!");
+            producer.send(record2);
+            ProducerRecord<String, String> record3 = new ProducerRecord<>(
+                    topic, 0, System.currentTimeMillis() - EXPIRE_INTERVAL, null, "last-expire-data!");
+            producer.send(record3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
